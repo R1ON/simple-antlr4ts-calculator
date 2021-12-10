@@ -19,28 +19,28 @@ export default class MyANLTRVisitor extends AbstractParseTreeVisitor<NameStringE
 
   visitAddSubExpression(ctx: AddSubExpressionContext) {
     if (ctx.childCount !== 3) {
-      const left = this.visit(ctx.getChild(0));
-      const right = this.visit(ctx.getChild(ctx.childCount - 1));
-
-      switch (ctx._op.type) {
-        case MyGrammarParser.PLUS:
-          return new AddExpression(left, right);
-
-        case MyGrammarParser.MINUS:
-          return new SubExpression(left, right);
-
-        default:
-          throw new Error(`
-            MyANLTRVisitor -> операция не является сложением или вычитанием.
-            Operation = ${ctx._op.text}.
-          `);
-      }
-    }
-
-    throw new Error(`
+      throw new Error(`
       MyANLTRVisitor -> количество 'children' должно быть равно 3.
       Children count = ${ctx.childCount}.
     `);
+    }
+
+    const left = this.visit(ctx.getChild(0));
+    const right = this.visit(ctx.getChild(ctx.childCount - 1));
+
+    switch (ctx._op.type) {
+      case MyGrammarParser.PLUS:
+        return new AddExpression(left, right);
+
+      case MyGrammarParser.MINUS:
+        return new SubExpression(left, right);
+
+      default:
+        throw new Error(`
+            MyANLTRVisitor -> операция не является сложением или вычитанием.
+            Operation = ${ctx._op.text}.
+          `);
+    }
   }
 
   visitNumberExpression(ctx: NumberExpressionContext) {
